@@ -23,7 +23,7 @@ export class MemStorage implements IStorage {
 
     // Configura el transporter de nodemailer usando variables de entorno
     this.transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
+      host: 'smtp.zoho.com',
       port: 465,
       secure: true, // true para 465, false para otros puertos
       auth: {
