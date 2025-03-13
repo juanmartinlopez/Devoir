@@ -29,7 +29,7 @@ export default function Footer() {
                 className="flex items-center text-gray-200 hover:text-white"
               >
                 <Phone className="h-5 w-5 mr-2" />
-                +54 264 400-0000
+                +54 264 570-4903
               </a>
               <a
                 href="mailto:contacto@devoir.com"
@@ -54,7 +54,7 @@ export default function Footer() {
             <h3 className="text-xl font-semibold mb-4">Síguenos</h3>
             <div className="flex space-x-4">
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/devoir.pro/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-gray-200"

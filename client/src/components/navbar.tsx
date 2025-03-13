@@ -7,6 +7,7 @@ import {
   SheetContent,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import logo from "../assets/brand.png";
 
 export default function Navbar() {
   const sections = [
@@ -38,11 +39,11 @@ export default function Navbar() {
             onClick={() => scrollToSection('hero')}
             className="font-bold text-xl text-primary"
           >
-            Devoir
+            <img src={logo} alt="Devoir" className="h-10" />
           </button>
 
-          {/* Menú de escritorio */}
-          <div className="hidden md:flex space-x-6">
+          {/* Menú de escritorio - solo visible en pantallas grandes (>1000px) */}
+          <div className="hidden lg:flex space-x-6">
             {sections.map((section) => (
               <button
                 key={section.href}
@@ -54,9 +55,9 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Menú móvil */}
+          {/* Menú móvil - visible en pantallas hasta 1000px */}
           <Sheet>
-            <SheetTrigger asChild className="md:hidden">
+            <SheetTrigger asChild className="lg:hidden">
               <Button variant="ghost" size="icon">
                 <Menu className="h-6 w-6" />
               </Button>

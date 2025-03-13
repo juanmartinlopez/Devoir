@@ -3,7 +3,7 @@ import { MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function WhatsAppButton() {
-  const whatsappNumber = "+542644000000"; // Número de WhatsApp de la empresa
+  const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER; // Usar variable de entorno o valor por defecto
   const message = "Hola, me gustaría consultar sobre sus servicios."; // Mensaje predeterminado
 
   const handleClick = () => {

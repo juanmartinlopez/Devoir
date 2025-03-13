@@ -21,7 +21,7 @@ const features = [
   {
     icon: Users,
     title: "Equipo Local",
-    description: "Somos un equipo de San Juan que entiende las necesidades y el contexto local de tu negocio."
+    description: "Somos un equipo argentino que entiende las necesidades y el contexto local de tu negocio."
   }
 ];
 

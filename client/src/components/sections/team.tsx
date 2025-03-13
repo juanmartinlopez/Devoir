@@ -1,24 +1,30 @@
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import imageFede from "../../assets/fotoFede.jpg"
-import imageJuanma from "../../assets/fotoJuanma.png"
-import imageMora from "../../assets/fotoMora.jpeg"
+import imageFede from "../../assets/fotoFede.jpg";
+import imageJuanma from "../../assets/fotoJuanma.png";
+import imageMora from "../../assets/fotoMora.jpeg";
+import imageLeo from "../../assets/fotoLeo.jpeg";
 
 const team = [
+  {
+    name: "Federico Ruiz Castilla",
+    image: imageFede,
+    description: "Desarrollador & Especialista en estrategias de marketing digital."
+  },
   {
     name: "Juan Cruz Mora",
     image: imageMora,
     description: "Desarrollador & Especialista en estrategias de marketing digital."
   },
   {
-    name: "Juan Martín López Frau",
-    image: imageJuanma,
+    name: "Leonardo Cricco",
+    image: imageLeo,
     description: "Desarrollador & Especialista en estrategias de marketing digital."
   },
   {
-    name: "Federico Ruiz Castilla",
-    image: imageFede,
+    name: "Juan Martín López Frau",
+    image: imageJuanma,
     description: "Desarrollador & Especialista en estrategias de marketing digital."
   }
 ];
@@ -38,7 +44,7 @@ export default function Team() {
           <p className="text-lg text-gray-600">Profesionales apasionados por la innovación</p>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-8 max-w-7xl mx-auto">
           {team.map((member, index) => (
             <motion.div
               key={member.name}

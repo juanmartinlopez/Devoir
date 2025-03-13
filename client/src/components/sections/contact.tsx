@@ -54,7 +54,7 @@ export default function Contact() {
   });
 
   const handleWhatsAppClick = () => {
-    const whatsappNumber = "+542645704903";
+    const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER;
     const message = "Hola, me gustaría consultar sobre sus servicios.";
     const encodedMessage = encodeURIComponent(message);
     window.open(
@@ -196,7 +196,7 @@ export default function Contact() {
                 </Button>
 
                 <a
-                  href="https://instagram.com/devoir"
+                  href="https://www.instagram.com/devoir.pro/"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
