@@ -6,12 +6,50 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+console.log('Iniciando script de post-construcción para Netlify...');
+
 // Verificar si el directorio dist existe, si no, crearlo
 const distPath = path.join(__dirname, 'dist');
 if (!fs.existsSync(distPath)) {
   fs.mkdirSync(distPath, { recursive: true });
   console.log('Directorio dist creado');
 }
+
+// Función para copiar archivos con manejo de errores
+function copyFileWithErrorHandling(source, dest, description) {
+  if (fs.existsSync(source)) {
+    try {
+      // Asegurarse de que el directorio de destino exista
+      const destDir = path.dirname(dest);
+      if (!fs.existsSync(destDir)) {
+        fs.mkdirSync(destDir, { recursive: true });
+      }
+      
+      fs.copyFileSync(source, dest);
+      console.log(`${description} copiado correctamente a: ${dest}`);
+      return true;
+    } catch (error) {
+      console.error(`Error al copiar ${description}:`, error);
+      return false;
+    }
+  } else {
+    console.warn(`${description} no encontrado en: ${source}`);
+    return false;
+  }
+}
+
+// Copiar el favicon
+const faviconSource = path.join(__dirname, 'client', 'public', 'favicon.ico');
+const faviconDest = path.join(distPath, 'favicon.ico');
+copyFileWithErrorHandling(faviconSource, faviconDest, 'Favicon');
+
+// También intentar copiar el favicon a otras ubicaciones comunes
+copyFileWithErrorHandling(faviconSource, path.join(distPath, 'assets', 'favicon.ico'), 'Favicon (assets)');
+
+// Copiar el archivo site.webmanifest
+const manifestSource = path.join(__dirname, 'client', 'public', 'site.webmanifest');
+const manifestDest = path.join(distPath, 'site.webmanifest');
+copyFileWithErrorHandling(manifestSource, manifestDest, 'Archivo site.webmanifest');
 
 // Verificar si ya existe un index.html generado por Vite
 const indexPath = path.join(distPath, 'index.html');
@@ -24,6 +62,28 @@ if (fs.existsSync(indexPath)) {
   // Modificar las rutas para que sean relativas
   htmlContent = htmlContent.replace(/src="\/assets\//g, 'src="./assets/');
   htmlContent = htmlContent.replace(/href="\/assets\//g, 'href="./assets/');
+  
+  // Asegurarnos de que el favicon esté incluido
+  if (!htmlContent.includes('favicon.ico')) {
+    const headEndPos = htmlContent.indexOf('</head>');
+    if (headEndPos !== -1) {
+      htmlContent = htmlContent.slice(0, headEndPos) + 
+        '\n  <link rel="icon" href="./favicon.ico" type="image/x-icon">\n  <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">\n' + 
+        htmlContent.slice(headEndPos);
+      console.log('Referencia al favicon añadida al index.html');
+    }
+  }
+  
+  // Asegurarnos de que el site.webmanifest esté incluido
+  if (!htmlContent.includes('site.webmanifest') && fs.existsSync(manifestDest)) {
+    const headEndPos = htmlContent.indexOf('</head>');
+    if (headEndPos !== -1) {
+      htmlContent = htmlContent.slice(0, headEndPos) + 
+        '\n  <link rel="manifest" href="./site.webmanifest">\n' + 
+        htmlContent.slice(headEndPos);
+      console.log('Referencia al site.webmanifest añadida al index.html');
+    }
+  }
   
   // Guardar el archivo modificado
   fs.writeFileSync(indexPath, htmlContent);
@@ -50,7 +110,11 @@ if (fs.existsSync(indexPath)) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Devoir Solutions</title>
   ${cssFile ? `<link rel="stylesheet" href="./assets/${cssFile}">` : ''}
-  <link rel="icon" type="image/x-icon" href="./favicon.ico">
+  <link rel="icon" href="./favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
+  <link rel="manifest" href="./site.webmanifest">
+  <meta name="theme-color" content="#000000">
+  <meta name="description" content="Devoir Solutions - Soluciones tecnológicas para tu negocio">
 </head>
 <body>
   <div id="root"></div>
@@ -72,7 +136,11 @@ if (fs.existsSync(indexPath)) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Devoir Solutions</title>
-  <link rel="icon" type="image/x-icon" href="./favicon.ico">
+  <link rel="icon" href="./favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
+  <link rel="manifest" href="./site.webmanifest">
+  <meta name="theme-color" content="#000000">
+  <meta name="description" content="Devoir Solutions - Soluciones tecnológicas para tu negocio">
 </head>
 <body>
   <div id="root"></div>
@@ -95,7 +163,11 @@ if (fs.existsSync(indexPath)) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Devoir Solutions</title>
-  <link rel="icon" type="image/x-icon" href="./favicon.ico">
+  <link rel="icon" href="./favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
+  <link rel="manifest" href="./site.webmanifest">
+  <meta name="theme-color" content="#000000">
+  <meta name="description" content="Devoir Solutions - Soluciones tecnológicas para tu negocio">
 </head>
 <body>
   <div id="root"></div>
@@ -109,22 +181,16 @@ if (fs.existsSync(indexPath)) {
   }
 }
 
-// Copiar el favicon si existe
-const faviconSource = path.join(__dirname, 'client', 'public', 'favicon.ico');
-const faviconDest = path.join(distPath, 'favicon.ico');
-if (fs.existsSync(faviconSource) && !fs.existsSync(faviconDest)) {
-  fs.copyFileSync(faviconSource, faviconDest);
-  console.log('Favicon copiado a dist');
-}
-
 // Copiar el archivo _redirects si existe
 const redirectsSource = path.join(__dirname, 'client', 'public', '_redirects');
 const redirectsDest = path.join(distPath, '_redirects');
 if (fs.existsSync(redirectsSource) && !fs.existsSync(redirectsDest)) {
   fs.copyFileSync(redirectsSource, redirectsDest);
   console.log('Archivo _redirects copiado a dist');
-} else if (!fs.existsSync(redirectsSource)) {
+} else if (!fs.existsSync(redirectsDest)) {
   // Si no existe el archivo _redirects, crearlo
   fs.writeFileSync(redirectsDest, '/* /index.html 200');
   console.log('Archivo _redirects creado en dist');
-} 
+}
+
+console.log('Script de post-construcción para Netlify completado.'); 
