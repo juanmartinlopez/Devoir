@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Favicon - Devoir Solutions</title>
+  
+  <!-- Favicon - múltiples formatos para asegurar compatibilidad -->
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
+  <h1>Página de prueba para el favicon</h1>
+  <p>Si puedes ver el favicon en la pestaña del navegador, entonces está funcionando correctamente.</p>
+  
+  <h2>Información de depuración:</h2>
+  <ul>
+    <li>URL del favicon: <code>/favicon.ico</code></li>
+    <li>Tamaño esperado: 238.3 KB</li>
+  </ul>
+  
+  <h2>Prueba de carga directa:</h2>
+  <p>Intenta abrir el favicon directamente: <a href="/favicon.ico" target="_blank">/favicon.ico</a></p>
+  
+  <script>
+    // Script para verificar si el favicon se carga correctamente
+    window.onload = function() {
+      const img = new Image();
+      img.onload = function() {
+        document.body.innerHTML += '<div style="color: green; font-weight: bold; margin-top: 20px;">✓ El favicon se ha cargado correctamente.</div>';
+      };
+      img.onerror = function() {
+        document.body.innerHTML += '<div style="color: red; font-weight: bold; margin-top: 20px;">✗ Error al cargar el favicon.</div>';
+      };
+      img.src = '/favicon.ico';
+    };
+  </script>
+</body>
+</html> 

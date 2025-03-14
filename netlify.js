@@ -38,18 +38,25 @@ function copyFileWithErrorHandling(source, dest, description) {
   }
 }
 
-// Copiar el favicon
+// Copiar el favicon a múltiples ubicaciones para asegurar que se encuentre
 const faviconSource = path.join(__dirname, 'client', 'public', 'favicon.ico');
 const faviconDest = path.join(distPath, 'favicon.ico');
-copyFileWithErrorHandling(faviconSource, faviconDest, 'Favicon');
+copyFileWithErrorHandling(faviconSource, faviconDest, 'Favicon (raíz)');
 
-// También intentar copiar el favicon a otras ubicaciones comunes
+// Copiar a ubicaciones adicionales
 copyFileWithErrorHandling(faviconSource, path.join(distPath, 'assets', 'favicon.ico'), 'Favicon (assets)');
+copyFileWithErrorHandling(faviconSource, path.join(distPath, 'images', 'favicon.ico'), 'Favicon (images)');
+copyFileWithErrorHandling(faviconSource, path.join(distPath, 'img', 'favicon.ico'), 'Favicon (img)');
 
 // Copiar el archivo site.webmanifest
 const manifestSource = path.join(__dirname, 'client', 'public', 'site.webmanifest');
 const manifestDest = path.join(distPath, 'site.webmanifest');
 copyFileWithErrorHandling(manifestSource, manifestDest, 'Archivo site.webmanifest');
+
+// Copiar el archivo de prueba del favicon
+const faviconTestSource = path.join(__dirname, 'favicon-test.html');
+const faviconTestDest = path.join(distPath, 'favicon-test.html');
+copyFileWithErrorHandling(faviconTestSource, faviconTestDest, 'Archivo de prueba del favicon');
 
 // Verificar si ya existe un index.html generado por Vite
 const indexPath = path.join(distPath, 'index.html');
@@ -63,14 +70,20 @@ if (fs.existsSync(indexPath)) {
   htmlContent = htmlContent.replace(/src="\/assets\//g, 'src="./assets/');
   htmlContent = htmlContent.replace(/href="\/assets\//g, 'href="./assets/');
   
-  // Asegurarnos de que el favicon esté incluido
+  // Asegurarnos de que el favicon esté incluido con múltiples formatos y rutas
   if (!htmlContent.includes('favicon.ico')) {
     const headEndPos = htmlContent.indexOf('</head>');
     if (headEndPos !== -1) {
       htmlContent = htmlContent.slice(0, headEndPos) + 
-        '\n  <link rel="icon" href="./favicon.ico" type="image/x-icon">\n  <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">\n' + 
+        '\n  <!-- Favicon -->\n' +
+        '  <link rel="icon" href="/favicon.ico" type="image/x-icon">\n' +
+        '  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">\n' +
+        '  <link rel="icon" href="./favicon.ico" type="image/x-icon">\n' +
+        '  <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">\n' +
+        '  <link rel="icon" href="favicon.ico" type="image/x-icon">\n' +
+        '  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">\n' +
         htmlContent.slice(headEndPos);
-      console.log('Referencia al favicon añadida al index.html');
+      console.log('Referencias al favicon añadidas al index.html');
     }
   }
   
@@ -79,7 +92,7 @@ if (fs.existsSync(indexPath)) {
     const headEndPos = htmlContent.indexOf('</head>');
     if (headEndPos !== -1) {
       htmlContent = htmlContent.slice(0, headEndPos) + 
-        '\n  <link rel="manifest" href="./site.webmanifest">\n' + 
+        '\n  <link rel="manifest" href="/site.webmanifest">\n' + 
         htmlContent.slice(headEndPos);
       console.log('Referencia al site.webmanifest añadida al index.html');
     }
@@ -87,7 +100,7 @@ if (fs.existsSync(indexPath)) {
   
   // Guardar el archivo modificado
   fs.writeFileSync(indexPath, htmlContent);
-  console.log('Rutas en index.html actualizadas para ser relativas');
+  console.log('Rutas en index.html actualizadas');
 } else {
   // Buscar los archivos generados por Vite
   const assetsDir = path.join(distPath, 'assets');
@@ -110,9 +123,16 @@ if (fs.existsSync(indexPath)) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Devoir Solutions</title>
   ${cssFile ? `<link rel="stylesheet" href="./assets/${cssFile}">` : ''}
+  
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
   <link rel="icon" href="./favicon.ico" type="image/x-icon">
   <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
-  <link rel="manifest" href="./site.webmanifest">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+  
+  <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#000000">
   <meta name="description" content="Devoir Solutions - Soluciones tecnológicas para tu negocio">
 </head>
@@ -136,9 +156,16 @@ if (fs.existsSync(indexPath)) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Devoir Solutions</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
   <link rel="icon" href="./favicon.ico" type="image/x-icon">
   <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
-  <link rel="manifest" href="./site.webmanifest">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+  
+  <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#000000">
   <meta name="description" content="Devoir Solutions - Soluciones tecnológicas para tu negocio">
 </head>
@@ -163,9 +190,16 @@ if (fs.existsSync(indexPath)) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Devoir Solutions</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
   <link rel="icon" href="./favicon.ico" type="image/x-icon">
   <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
-  <link rel="manifest" href="./site.webmanifest">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+  
+  <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#000000">
   <meta name="description" content="Devoir Solutions - Soluciones tecnológicas para tu negocio">
 </head>
@@ -192,5 +226,28 @@ if (fs.existsSync(redirectsSource) && !fs.existsSync(redirectsDest)) {
   fs.writeFileSync(redirectsDest, '/* /index.html 200');
   console.log('Archivo _redirects creado en dist');
 }
+
+// Crear un archivo favicon.html para probar
+const faviconTestPath = path.join(distPath, 'favicon.html');
+const faviconTestContent = `
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Favicon</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <h1>Página de prueba para el favicon</h1>
+  <p>Si puedes ver el favicon en la pestaña del navegador, entonces está funcionando correctamente.</p>
+</body>
+</html>
+`;
+fs.writeFileSync(faviconTestPath, faviconTestContent);
+console.log('Archivo favicon.html creado para pruebas');
 
 console.log('Script de post-construcción para Netlify completado.'); 

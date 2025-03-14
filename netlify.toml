@@ -12,6 +12,20 @@
   to = "/index.html"
   status = 200
 
+# Excepción para el favicon
+[[redirects]]
+  from = "/favicon.ico"
+  to = "/favicon.ico"
+  status = 200
+  force = true
+
+# Excepción para el site.webmanifest
+[[redirects]]
+  from = "/site.webmanifest"
+  to = "/site.webmanifest"
+  status = 200
+  force = true
+
 # Configuración de encabezados para recursos estáticos
 [[headers]]
   for = "/assets/*"
@@ -33,6 +47,7 @@
   for = "/favicon.ico"
   [headers.values]
     Cache-Control = "public, max-age=86400"
+    Content-Type = "image/x-icon"
 
 # Configuración para el site.webmanifest
 [[headers]]
